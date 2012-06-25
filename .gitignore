@@ -10,3 +10,8 @@
 *.lai
 *.la
 *.a
+
+# Editor saves
+*~
+
+*.exe

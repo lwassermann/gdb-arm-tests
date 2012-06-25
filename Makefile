@@ -4,12 +4,12 @@ CFLAGS  = -DMODET
 LDFLAGS = -lbfd -lintl -liberty
 GDBBUILDFOLDER = /d/build/gdb-7.4.1
 
-all: emulator
+all: emulator disassembler
 
 emulator: testarmemul.c
-	$(CC) $(CFLAGS) armulmem.c    -c armulmem.o    -I$(GDBBUILDFOLDER)/sim/arm/
-	$(CC) $(CFLAGS) testarmemul.c -c testarmemul.o -I$(GDBBUILDFOLDER)/sim/arm/
-	gcc -o testarmemul.exe testarmemul.o armulmem.o $(GDBBUILDFOLDER)/sim/arm/libsim.a $(LDFLAGS)
+	$(CC) $(CFLAGS) armulmem.c -c -I$(GDBBUILDFOLDER)/sim/arm/
+	$(CC) $(CFLAGS) testarmemul.c -c -I$(GDBBUILDFOLDER)/sim/arm/
+	gcc -o testarmemul.exe testarmemul.o armulmem.o libsim.a $(LDFLAGS)
 #	testarmemul.exe
 
 disassembler: testarmdisasm.c

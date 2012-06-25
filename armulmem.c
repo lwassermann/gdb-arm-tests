@@ -1,3 +1,8 @@
+/*
+  This file is a compy of armvirt.c, which is part of the ARMulator distributed e.g. with gdb and skyeye.
+  In order to overwrite GetWord and PutWord, I had to copy the whole file.
+*/
+
 /*  armvirt.c -- ARMulator virtual memory interace:  ARM6 Instruction Emulator.
     Copyright (C) 1994 Advanced RISC Machines Ltd.
  
@@ -61,34 +66,6 @@ int SWI_vector_installed = FALSE;
 static ARMword
 GetWord (ARMul_State * state, ARMword address, int check)
 {
-  /*
-  ARMword page;
-  ARMword offset;
-  ARMword **pagetable;
-  ARMword *pageptr;
-
-  if (check && state->is_XScale)
-    XScale_check_memacc (state, &address, 0);
-
-  page = address >> PAGEBITS;
-  offset = (address & OFFSETBITS) >> 2;
-  pagetable = (ARMword **) state->MemDataPtr;
-  pageptr = *(pagetable + page);
-
-  if (pageptr == NULL)
-    {
-      pageptr = (ARMword *) malloc (PAGESIZE);
-
-      if (pageptr == NULL)
-	{
-	  perror ("ARMulator can't allocate VM page");
-	  exit (12);
-	}
-
-      *(pagetable + page) = pageptr;
-    }
-  
-  return *(pageptr + offset); */
   return *((ARMword*) address);
 }
 
@@ -99,38 +76,6 @@ GetWord (ARMul_State * state, ARMword address, int check)
 static void
 PutWord (ARMul_State * state, ARMword address, ARMword data, int check)
 {
-  /*
-  ARMword page;
-  ARMword offset;
-  ARMword **pagetable;
-  ARMword *pageptr;
-
-  if (check && state->is_XScale)
-    XScale_check_memacc (state, &address, 1);
-
-  page = address >> PAGEBITS;
-  offset = (address & OFFSETBITS) >> 2;
-  pagetable = (ARMword **) state->MemDataPtr;
-  pageptr = *(pagetable + page);
-
-  if (pageptr == NULL)
-    {
-      pageptr = (ARMword *) malloc (PAGESIZE);
-      if (pageptr == NULL)
-	{
-	  perror ("ARMulator can't allocate VM page");
-	  exit (13);
-	}
-
-      *(pagetable + page) = pageptr;
-    }
-
-  if (address == 0x8)
-    SWI_vector_installed = TRUE;
-
-  *(pageptr + offset) = data; */
-  
-  // This part of the code has to assume that the address is already allocated
   *((ARMword*) address) = data;
 }
 

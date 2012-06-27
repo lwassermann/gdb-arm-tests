@@ -19,8 +19,8 @@ my_fprintf(void* stream, const char * format, ...)
 int
 main ()
   {
-    char data[8] = {0xE3, 0xA0, 0x10, 0x80, 
-    		    0xE2, 0x81, 0x00, 0x01};
+    unsigned int data[2] = {0xE3A01080, 
+			    0xE2810001};
     bfd_byte* buf = (bfd_byte*) &data[0];
     
     disassemble_info* c = (disassemble_info*) calloc(1, sizeof(disassemble_info));
@@ -54,7 +54,7 @@ main ()
       {
       	//disassembler-function: print_insn_big_arm
       	//other possible functions are listed in opcodes/dissassemble.c
-      	unsigned int size = print_insn_big_arm((bfd_vma) pos, c);
+      	unsigned int size = print_insn_little_arm((bfd_vma) pos, c);
       	pos += size;
       	count++;
       	fprintf(stdout, "\n");

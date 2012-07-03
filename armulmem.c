@@ -160,8 +160,8 @@ ARMul_ReLoadInstr (ARMul_State * state, ARMword address, ARMword isize)
 #endif
 
   if (address < minReadAddress 
-  	  || address + isize > (state->MemSize) 
-  	  || (address + isize > minWriteAddress && minWriteAddress != 0))
+  	  || address >= (state->MemSize) 
+  	  || (address >= minWriteAddress && minWriteAddress != 0))
     {
       ARMul_PREFETCHABORT (address);
       return 0xEF000011;

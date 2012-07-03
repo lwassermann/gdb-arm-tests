@@ -31,17 +31,20 @@ main ()
     ARMword data[4] = { 0xE3A01080, 
     			0xE2810001,
     			0xE1B01001,
-    			0x0};
+    			0xE3A01001};
+    ARMword *memory = malloc(4*2048);
+    for(i = 0; i < 2048; i++){ memory[i] = 0xE3A01001; }
+    
     ARMul_State* state;
     
     ARMul_EmulateInit ();
     state = ARMul_NewState ();
     
-    state->MemDataPtr = (unsigned char *) &data;
-    state->MemSize = 4 * 1;
+    state->MemDataPtr = (unsigned char *) memory;
+    state->MemSize = 2*4096;
     
     minReadAddress = (ARMword) 0x0;
-    minWriteAddress = (ARMword) 0x0;
+    minWriteAddress = (ARMword) 0x4096;
 
     //ARMul_SelectProcessor(state, ARM_v5_Prop | ARM_v5e_Prop | ARM_v6_Prop);
     //ARMul_OSInit (state);

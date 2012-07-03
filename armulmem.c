@@ -66,22 +66,24 @@ int SWI_vector_installed = FALSE;
 static ARMword
 GetWord (ARMul_State * state, ARMword address, int check)
 {
-  if(address < minReadAddress || address >= (state->MemSize) + 8)
+  if(address < minReadAddress || address >= (state->MemSize))
   {
-    // In order to be able to execute the last instruction in a memory block, allow
-    // access to two more words than are actually part of the memory.
-    // 2 * 32 bit = 8 byte
-  
     //raise memory access error
-    state->EndCondition = 3; //MemoryBoundsError
+    state->EndCondition = 3; //MemoryBoundsError;
     state->abortSig = HIGH;
     state->Aborted = ARMul_AddrExceptnV;
     return 0xEF000011; // SWI_Exit, has the effect, that simulation stops
     
-    // a simple state->Emulate = STOP is not enough, because the returned Instruction
+    // A simple state->Emulate = STOP is not enough, because the returned instruction
     // is interpreted and executed, before the STOP flag is looked at again.
+    //
+    // additionally, two instructions are always prefetched. Therefore, stopping 
+    // directly would stop one instructions early.
   }
-  return *((ARMword*) (state->MemDataPtr + address));
+  else
+  {
+    return *((ARMword*) (state->MemDataPtr + address));
+  }
 }
 
 /***************************************************************************\

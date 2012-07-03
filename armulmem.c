@@ -1,6 +1,7 @@
 /*
   This file is a compy of armvirt.c, which is part of the ARMulator distributed e.g. with gdb and skyeye.
   In order to overwrite GetWord and PutWord, I had to copy the whole file.
+  Also changed: ReLoadInstr.
 */
 
 /*  armvirt.c -- ARMulator virtual memory interace:  ARM6 Instruction Emulator.
@@ -66,19 +67,12 @@ int SWI_vector_installed = FALSE;
 static ARMword
 GetWord (ARMul_State * state, ARMword address, int check)
 {
-  if(address < minReadAddress || address >= (state->MemSize))
+  if(address < minReadAddress || address + 4 > (state->MemSize))
   {
     //raise memory access error
     state->EndCondition = 3; //MemoryBoundsError;
-    state->abortSig = HIGH;
-    state->Aborted = ARMul_AddrExceptnV;
-    return 0xEF000011; // SWI_Exit, has the effect, that simulation stops
-    
-    // A simple state->Emulate = STOP is not enough, because the returned instruction
-    // is interpreted and executed, before the STOP flag is looked at again.
-    //
-    // additionally, two instructions are always prefetched. Therefore, stopping 
-    // directly would stop one instructions early.
+    state->Emulate = FALSE;
+    return ARMul_ABORTWORD;
   }
   else
   {
@@ -164,6 +158,14 @@ ARMul_ReLoadInstr (ARMul_State * state, ARMword address, ARMword isize)
       ARMul_CLEARABORT;
     }
 #endif
+
+  if (address < minReadAddress 
+  	  || address + isize > (state->MemSize) 
+  	  || (address + isize > minWriteAddress && minWriteAddress != 0))
+    {
+      ARMul_PREFETCHABORT (address);
+      return 0xEF000011;
+    }
 
   if ((isize == 2) && (address & 0x2))
     {

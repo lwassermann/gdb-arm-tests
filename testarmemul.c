@@ -51,6 +51,7 @@ main ()
     print_processor(state);
     state->Reg[15] = ARMul_DoProg(state);
     print_processor(state);
+    printf("%i", (state->Reg[15] == state->MemSize));
     
 //    state->Reg[15] = ARMul_DoInstr(state);
 //    print_processor(state);

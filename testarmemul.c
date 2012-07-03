@@ -5,6 +5,8 @@
 #include <armdefs.h>
 #include <armemu.h>
 
+#include "testarmemul.h"
+
 void
 print_processor(ARMul_State* state)
   {
@@ -19,7 +21,7 @@ print_processor(ARMul_State* state)
     	state->loaded,
     	state->NextInstr,
     	ARMul_ReadWord(state, ARMul_GetPC(state)),
-    	state->ErrorCode);
+    	state->EndCondition);
   }
 
 int
@@ -32,26 +34,30 @@ main ()
     			0x0};
     ARMul_State* state;
     
-    
     ARMul_EmulateInit ();
     state = ARMul_NewState ();
     
+    state->MemDataPtr = (unsigned char *) &data;
+    state->MemSize = 4 * 2;
+    
+    minReadAddress = (ARMword) 0x0;
+    minWriteAddress = (ARMword) 0x0;
+
     //ARMul_SelectProcessor(state, ARM_v5_Prop | ARM_v5e_Prop | ARM_v6_Prop);
-    //ARMul_MemoryInit (state, 1<<21); // mem_size copied from gdb armul wrapper
     //ARMul_OSInit (state);
     
-    ARMul_SetPC (state, (ARMword) &data);
+    ARMul_SetPC (state, (ARMword) 0x0);
     
     print_processor(state);
     state->Reg[15] = ARMul_DoInstr(state);
     print_processor(state);
     
-    state->NextInstr = RESUME;
+    state->Reg[15] = ARMul_DoInstr(state);
+    print_processor(state);
     
     state->Reg[15] = ARMul_DoInstr(state);
     print_processor(state);
-    //ARMul_DoInstr(state);
-    //print_processor(state);
+    
     free(state);
     
     return 0;

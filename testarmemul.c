@@ -38,7 +38,7 @@ main ()
     state = ARMul_NewState ();
     
     state->MemDataPtr = (unsigned char *) &data;
-    state->MemSize = 4 * 2;
+    state->MemSize = 4 * 1;
     
     minReadAddress = (ARMword) 0x0;
     minWriteAddress = (ARMword) 0x0;
@@ -49,14 +49,14 @@ main ()
     ARMul_SetPC (state, (ARMword) 0x0);
     
     print_processor(state);
-    state->Reg[15] = ARMul_DoInstr(state);
+    state->Reg[15] = ARMul_DoProg(state);
     print_processor(state);
     
-    state->Reg[15] = ARMul_DoInstr(state);
-    print_processor(state);
+//    state->Reg[15] = ARMul_DoInstr(state);
+//    print_processor(state);
     
-    state->Reg[15] = ARMul_DoInstr(state);
-    print_processor(state);
+//    state->Reg[15] = ARMul_DoInstr(state);
+//    print_processor(state);
     
     free(state);
     

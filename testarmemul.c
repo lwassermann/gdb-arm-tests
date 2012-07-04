@@ -44,7 +44,7 @@ main ()
     state->MemSize = 2*4096;
     
     minReadAddress = (ARMword) 0x0;
-    minWriteAddress = (ARMword) 0x4096;
+    minWriteAddress = (ARMword) 0x1000;
 
     //ARMul_SelectProcessor(state, ARM_v5_Prop | ARM_v5e_Prop | ARM_v6_Prop);
     //ARMul_OSInit (state);
@@ -54,7 +54,7 @@ main ()
     print_processor(state);
     state->Reg[15] = ARMul_DoProg(state);
     print_processor(state);
-    printf("%i", (state->Reg[15] == state->MemSize));
+    printf("%i", (state->Reg[15] == minWriteAddress));
     
 //    state->Reg[15] = ARMul_DoInstr(state);
 //    print_processor(state);

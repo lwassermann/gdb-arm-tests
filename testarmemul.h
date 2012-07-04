@@ -1,4 +1,4 @@
 
 
-static unsigned long	minReadAddress, minWriteAddress;
+unsigned long	minReadAddress, minWriteAddress;
 

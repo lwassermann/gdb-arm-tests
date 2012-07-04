@@ -59,6 +59,7 @@ defined to generate aborts. */
 int SWI_vector_installed = FALSE;
 
 #include "testarmemul.h"
+#include <stdio.h>
 
 /***************************************************************************\
 *        Get a Word from Virtual Memory, maybe allocating the page          *
@@ -69,6 +70,7 @@ GetWord (ARMul_State * state, ARMword address, int check)
 {
   if(address < minReadAddress || address + 4 > (state->MemSize))
   {
+    printf("memory access error: %p\n", address);
     //raise memory access error
     state->EndCondition = 3; //MemoryBoundsError;
     state->Emulate = FALSE;
@@ -161,8 +163,9 @@ ARMul_ReLoadInstr (ARMul_State * state, ARMword address, ARMword isize)
 
   if (address < minReadAddress 
   	  || address >= (state->MemSize) 
-  	  || (address >= minWriteAddress && minWriteAddress != 0))
+  	  || (address >= minWriteAddress && minWriteAddress > 0))
     {
+      printf("instruction load error: %p (%p)\n", address, minWriteAddress);
       ARMul_PREFETCHABORT (address);
       return 0xEF000011;
     }

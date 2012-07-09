@@ -19,8 +19,9 @@ my_fprintf(void* stream, const char * format, ...)
 int
 main ()
   {
-    unsigned int data[2] = {0xE3A01080, 
-			    0xE2810001};
+    unsigned int data[3] = {0xE3A01080, 
+							0xE2810001,
+							0xE1A01001};
     bfd_byte* buf = (bfd_byte*) &data[0];
     
     disassemble_info* c = (disassemble_info*) calloc(1, sizeof(disassemble_info));
@@ -42,7 +43,7 @@ main ()
     
     c->buffer_vma = 0;
     c->buffer = buf;
-    c->buffer_length = 8;
+    c->buffer_length = 12;
     
     // while-loop for calling single instruction decoding:
     unsigned int count = 0;

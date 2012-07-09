@@ -60,6 +60,7 @@ int SWI_vector_installed = FALSE;
 
 #include "testarmemul.h"
 #include <stdio.h>
+#include <armemu.h>
 
 /***************************************************************************\
 *        Get a Word from Virtual Memory, maybe allocating the page          *
@@ -165,9 +166,7 @@ ARMul_ReLoadInstr (ARMul_State * state, ARMword address, ARMword isize)
   	  || address >= (state->MemSize) 
   	  || (address >= minWriteAddress && minWriteAddress > 0))
     {
-      printf("instruction load error: %p (%p)\n", address, minWriteAddress);
-      ARMul_PREFETCHABORT (address);
-      return 0xEF000011;
+       return 0xEF200000; //SWI Exit
     }
 
   if ((isize == 2) && (address & 0x2))

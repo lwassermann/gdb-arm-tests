@@ -31,9 +31,9 @@ main ()
     ARMword data[4] = { 0xE3A01080, 
     			0xE2810001,
     			0xE1B01001,
-    			0xE3A01001};
+    			0xE1A01001};
     ARMword *memory = malloc(4*2048);
-    for(i = 0; i < 2048; i++){ memory[i] = 0xE3A01001; }
+    for(i = 0; i < 2048; i++){ memory[i] = 0xE1A01001; }
     
     ARMul_State* state;
     
@@ -44,15 +44,18 @@ main ()
     state->MemSize = 2*4096;
     
     minReadAddress = (ARMword) 0x0;
-    minWriteAddress = (ARMword) 0x1000;
+    minWriteAddress = (ARMword) 0x0010;
 
     //ARMul_SelectProcessor(state, ARM_v5_Prop | ARM_v5e_Prop | ARM_v6_Prop);
     //ARMul_OSInit (state);
     
-    ARMul_SetPC (state, (ARMword) 0x0);
+    ARMul_SetPC (state, 0);
     
     print_processor(state);
-    state->Reg[15] = ARMul_DoProg(state);
+    while(state->EndCondition == 0)
+    {
+      state->Reg[15] = ARMul_DoInstr(state);
+    }
     print_processor(state);
     printf("%i", (state->Reg[15] == minWriteAddress));
     
@@ -66,3 +69,19 @@ main ()
     
     return 0;
   }
+
+// adding custom Software Interrupts
+unsigned __real_ARMul_OSHandleSWI(ARMul_State*, ARMword);
+  
+unsigned
+__wrap_ARMul_OSHandleSWI (ARMul_State * state, ARMword number)
+{
+	switch(number)
+	  {
+		case 0x200000:
+			state->Emulate = 0; // STOP
+			state->EndCondition = 3; // MemoryAccessViolation
+			return 1; //TRUE
+	  }
+	return __real_ARMul_OSHandleSWI(state, number);
+}

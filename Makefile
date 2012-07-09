@@ -10,7 +10,7 @@ all: emulator disassembler
 emulator: testarmemul.c
 	$(CC) $(CFLAGS) armulmem.c -c -I$(GDBBUILDFOLDER)/sim/arm/
 	$(CC) $(CFLAGS) testarmemul.c -c -I$(GDBBUILDFOLDER)/sim/arm/
-	gcc -o testarmemul.exe testarmemul.o armulmem.o libsim.a $(LDFLAGS)
+	gcc -o testarmemul.exe testarmemul.o armulmem.o libsim.a -Wl,-wrap,ARMul_OSHandleSWI $(LDFLAGS)
 #	testarmemul.exe
 
 disassembler: testarmdisasm.c

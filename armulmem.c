@@ -90,7 +90,15 @@ GetWord (ARMul_State * state, ARMword address, int check)
 static void
 PutWord (ARMul_State * state, ARMword address, ARMword data, int check)
 {
-  *((ARMword*) state->MemDataPtr + address) = data;
+  if(address < minWriteAddress || address + 4 > (state->MemSize))
+  {
+    state->Emulate = FALSE;
+    state->EndCondition = 3; //MemoryBoundsError;
+  } 
+  else
+  {
+    *((ARMword*) (state->MemDataPtr + address)) = data;
+  }
 }
 
 /***************************************************************************\

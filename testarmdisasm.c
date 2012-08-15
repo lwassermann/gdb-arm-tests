@@ -24,7 +24,7 @@ main ()
 							0xE1A01001};
     bfd_byte* buf = (bfd_byte*) &data[0];
     
-    disassemble_info* c = (disassemble_info*) calloc(1, sizeof(disassemble_info));
+    disassemble_info* c = (struct disassemble_info*) calloc(1, sizeof(disassemble_info));
     // void init_disassemble_info (struct disassemble_info *dinfo, void *stream, fprintf_ftype fprintf_func)
     init_disassemble_info ( c, stdout, my_fprintf);
     

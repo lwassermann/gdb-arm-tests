@@ -7,6 +7,8 @@
 
 #include "testarmemul.h"
 
+extern int (*deprecated_ui_loop_hook) (int) = NULL;
+
 void
 print_processor(ARMul_State* state)
   {

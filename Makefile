@@ -1,11 +1,11 @@
-GDBBUILDFOLDER = /home/lars/Documents/gsoc/gdb
+GDBBUILDFOLDER = ../gdb
 CC      = gcc
 # activate MODET because otherwise we would need to recompile libsim.a
-CFLAGS  = -DMODET -g
+CFLAGS  = -DMODET -g -m32 -I$(GDBBUILDFOLDER)/bfd/
 LDFLAGS = 	-lbfd -liberty
 			
 
-all: disassembler emulator
+all: disassembler
 
 emulator: testarmemul.c
 	$(CC) $(CFLAGS) armulmem.c -c -I$(GDBBUILDFOLDER)/sim/arm/
@@ -15,5 +15,5 @@ emulator: testarmemul.c
 
 disassembler: testarmdisasm.c
 	# libopcodes is included directly, because I had to compile a version which included the ARM disassembler.
-	$(CC) $(CFLAGS) testarmdisasm.c -m32 -o testarmdisasm.exe $(GDBBUILDFOLDER)/opcodes/libopcodes.a $(LDFLAGS)
-#	./testarmdisasm.exe
+	$(CC) $(CFLAGS) testarmdisasm.c -o testarmdisasm.exe $(GDBBUILDFOLDER)/opcodes/libopcodes.a $(LDFLAGS)
+	./testarmdisasm.exe
